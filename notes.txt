@@ -1,0 +1,9 @@
+We created the token type, by defining a struct which has value, type of token, and defined all the token types possible
+
+create a lexer, which parses the code to generate tokens, currently writing tests for the lexer step by step. Learnt about the testing library of go (should implement in on my website)
+just created a basic text, with input and expected tokens.
+Now moving on, if we encounter a letter, it might be a string indentifier of a keyword, so just coded the logic for that
+Now lexer detects keywords too, to do this, we pass the string detected into a LookupIdent which returns type of token, be it a command or identifier
+Now we added a helper func in NextToken func to skip whitespaces, by checking current char in lexer struct
+
+
