@@ -5,5 +5,34 @@ just created a basic text, with input and expected tokens.
 Now moving on, if we encounter a letter, it might be a string indentifier of a keyword, so just coded the logic for that
 Now lexer detects keywords too, to do this, we pass the string detected into a LookupIdent which returns type of token, be it a command or identifier
 Now we added a helper func in NextToken func to skip whitespaces, by checking current char in lexer struct
+Now added a helper func to detect a int, and if its a number, keep reading until not number and retrurn the string (handling int in our lang)
+
+we will add support for ==, !, !=, -, /, *, <, > and the keywords true, false, if, else and return.
+we first add 1 char tokens like !, -, /, *, <, >  (pretty easy as we can just follow what we did for above tokens)
+we then add new keywords to the lexer true,false,if,else,return
+to add support for ==,!= we extend the = and ! branches to look ahead and check to return proper token
+
+We create a REPL (read,eval,print,loop) like a console for our lang, for now the repl will only convert our source code into tokens
+Need to do the parsing part staring from the ast package
+
+our parser for the Monkey programming language -> Its input
+will be the tokens we defined in the previous chapter, produced by the lexer we already wrote.
+We will define our own AST, suited to our needs as interpreters of the Monkey programming
+language, and construct instances of this AST while recursively parsing tokens.
+Parse generators -> generate parsers when fed a formal description of the language like yacc, bison or ANTLR
+
+The parser we are going to write is a recursive descent parser. And in particular, it’s a “top
+down operator precedence” parser, sometimes called “Pratt parser”, after its inventor Vaughan
+Pratt.
+A recursive descent
+parser, which works from the top down, is often recommended for newcomers to parsing, since
+it closely mirrors the way we think about ASTs and their construction.
+
+first we parse the let statment   
+// Every node in ast implements the node interface, meaning it has to provide a TokenLiteral() method, -> just to debug. Some of the nodes implement statement interface and some expression interface.
+a let can have a literal or expression on the right side, so we neeed to define how it will look in ast
+
+we parse the return and let statement, by forming a ast based on the tokens we recieve. 
+now we go on to parse expressions.
 
 
