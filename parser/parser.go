@@ -13,6 +13,20 @@ type Parser struct {
 	errors    []string
 	curToken  token.Token
 	peekToken token.Token
+
+    prefixParseFns map[token.TokenType]prefixParsefn
+    infixParseFns map[token.TokenType]infixParsefn
+
+}
+
+type (
+	prefixParsefn func() ast.Expression
+	infixParsefn  func(ast.Expression) ast.Expression // the parameter taken in is the left side of the expression, since infix takes is between two things
+)
+
+// Helper functions to add the prefix and infix func for a specific token
+func(p *Parser)registerPefix(tokenType token.TokenType,fn prefixParsefn){
+    p.prefixParseFns[tokenType] = fn
 }
 
 // Initialized the Parser, by taking in lexer struct, initializing it in parser and calling nextoken func for pareser to intialize the cur and peek token of parser

@@ -32,7 +32,61 @@ first we parse the let statment
 // Every node in ast implements the node interface, meaning it has to provide a TokenLiteral() method, -> just to debug. Some of the nodes implement statement interface and some expression interface.
 a let can have a literal or expression on the right side, so we neeed to define how it will look in ast
 
-we parse the return and let statement, by forming a ast based on the tokens we recieve. 
+we parse the return and let statement, by forming a ast based on the tokens we recieve. let and return are the only statements, rest all are expressions
 now we go on to parse expressions.
 
+A Pratt parser’s main idea is the association of parsing functions (which Pratt calls “semantic
+code”) with token types. Whenever this token type is encountered, the parsing functions are
+called to parse the appropriate expression and return an AST node that represents it. Each
+token type can have up to two parsing functions associated with it, depending on whether the
+token is found in a prefix or an infix position.
 
+parsing expression is more complex and interesting as we need to take care of operator precedence and brackets
+
+
+Monkey has expressions involving prefix operators:
+-5
+!true
+!false
+
+And of course it has infix operators (or “binary operators”):
+5 + 5
+5 - 5
+5 / 5
+5 * 5
+
+Besides these basic arithmetic operators, there are also the following comparison operators:
+foo == bar
+foo != bar
+foo < bar
+foo > bar
+
+And of course, as we previously saw, we can use parentheses to group expressions and influence
+the order of evaluation:
+5 * (5 + 5)
+((5 + 5) * 5) * 5
+
+Then there are call expressions:
+add(2, 3)
+add(add(2, 3), add(5, 10))
+max(5, add(5, (5 * 5)))
+
+Identifiers are expressions too:
+foo * bar / foobar
+add(foo, bar)
+
+let add = fn(x, y) { return x + y };
+And here we use a function literal in place of an identifier:
+fn(x, y) { return x + y }(5, 5)
+(fn(x) { return x }(5) + 10 ) * 10
+In contrast to a lot of widely used programming languages we also have “if expressions” in
+Monkey:
+let result = if (10 > 5) { true } else { false };
+result // => true
+
+
+A Pratt parser’s main idea is the association of parsing functions (which Pratt calls “semantic
+code”) with token types. Whenever this token type is encountered, the parsing functions are
+called to parse the appropriate expression and return an AST node that represents it. Each
+token type can have up to two parsing functions associated with it, depending on whether the
+token is found in a prefix or an infix position.
