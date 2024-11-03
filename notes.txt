@@ -90,3 +90,21 @@ code”) with token types. Whenever this token type is encountered, the parsing 
 called to parse the appropriate expression and return an AST node that represents it. Each
 token type can have up to two parsing functions associated with it, depending on whether the
 token is found in a prefix or an infix position.
+
+we added a map for infix and postfix func where the key is the token
+we start with identifiers
+
+add(foobar, barfoo);
+foobar + barfoo;
+if (foobar) {
+// [...]
+}
+Here we have identifiers as arguments in a function call, as operands in an infix expression and
+as a standalone expression as part of a conditional. They can be used in all of these contexts,
+because identifiers are expressions just like 1 + 2. And just like any other expression identifiers
+produce a value: they evaluate to the value they are bound to.
+
+we build a identifier test in parser
+
+l: we build our AST node and then try to fill its field by calling other
+parsing functions. 

@@ -1,9 +1,11 @@
 package parser
 
 import (
+	"fmt"
+	"testing"
+
 	"github.com/tren03/go-interpreter/ast"
 	"github.com/tren03/go-interpreter/lexer"
-	"testing"
 )
 
 func TestLetStatements(t *testing.T) {
@@ -39,6 +41,7 @@ let foobar = 838383;`
 	}
 	for i, tt := range tests {
 		stmt := program.Statements[i]
+		fmt.Println("statement : ", stmt)
 		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
 			return
 		}
@@ -94,6 +97,7 @@ return 993322;
 	}
 	for _, stmt := range program.Statements {
 		returnStmt, ok := stmt.(*ast.ReturnStatement)
+		fmt.Println("return test statement : ", returnStmt)
 		if !ok {
 			t.Errorf("stmt not *ast.returnStatement. got=%T", stmt)
 			continue
@@ -102,5 +106,80 @@ return 993322;
 			t.Errorf("returnStmt.TokenLiteral not 'return', got %q",
 				returnStmt.TokenLiteral())
 		}
+	}
+}
+
+// foobar is a expression, it is of type ast.ExpressionStatement. The ast.ExpressionStatement has tokenType and Expression interface in it.  we check if the Expression interface of the stmt is of type ast.identifier, then we check if the value of ident is foobar
+
+/*
+Program
+└── Statements (array of statements)
+
+	└── Statements[0]: ExpressionStatement
+	    └── Expression: Identifier
+	           └── Value: "foobar"
+	           └── TokenLiteral: "foobar"
+*/
+func TestIdentifierExpression(t *testing.T) {
+	input := "foobar"
+	l := lexer.New(input) // initialize the lexer
+	p := New(l)           // initialize the pareser
+	program := p.ParseProgram()
+	checkParserErrors(t, p) // we have implemented this to read through the error array of the pareser and display
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program has not enough statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement) // type assertion, just checks if the statement is of expression type
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
+
+	ident, ok := stmt.Expression.(*ast.Identifier)
+	if !ok {
+		t.Fatalf("exp not *ast.Identifier. got=%T", stmt.Expression)
+	}
+
+	if ident.Value != "foobar" {
+		t.Errorf("ident.Value not %s. got=%s", "foobar", ident.Value)
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		t.Errorf("ident.TokenLiteral not %s. got=%s", "foobar",
+			ident.TokenLiteral())
+	}
+
+}
+
+func TestIntergerLiterals(t *testing.T) {
+	input := "5;"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program has not enough statements. got=%d",
+			len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
+
+	literal, ok := stmt.Expression.(*ast.IntegerLiteral)
+	if !ok {
+		t.Fatalf("exp not *ast.IntegerLiteral. got=%T", stmt.Expression)
+	}
+	if literal.Value != 5 {
+		t.Errorf("literal.Value not %d. got=%d", 5, literal.Value)
+	}
+	if literal.TokenLiteral() != "5" {
+		t.Errorf("literal.TokenLiteral not %s. got=%s", "5",
+			literal.TokenLiteral())
 	}
 }

@@ -44,15 +44,18 @@ func (i *Identifier) expressionNode()      {}
 func (i *Identifier) TokenLiteral() string { return i.Token.Literal } // just so that let can be considered in the node interface
 func (i *Identifier) String() string       { return i.Value }
 
+// ******* LET STATEMENT *******
 // Ast node stuct for let statement - let <identifier> = <expression> (the Right side can be a literal or expression, we take experssion to cover all cases)
 type LetStatement struct {
 	Token token.Token // The token.LET token
-	Name  *Identifier
-	Value Expression
+	Name  *Identifier // The name of the variable
+	Value Expression  // The RHS of let statement (let a = 5*5 -> 5*5 is and expression since it provides a value)
 }
 
 func (ls *LetStatement) statementNode()       {}                          // just so that let can be considered in the statement interface
-func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal } // just so that let can be considered in the node interface
+func (ls *LetStatement) TokenLiteral() string { return ls.Token.Literal } // just so that let can be considered in the node interface - returns the literal linked to the LET token
+
+// Just for testing purposes
 func (ls *LetStatement) String() string {
 	var out bytes.Buffer
 
@@ -107,3 +110,12 @@ func (p *Program) String() string {
 	}
 	return out.String()
 }
+
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (il *IntegerLiteral) expressionNode()      {}
+func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
+func (il *IntegerLiteral) String() string       { return il.Token.Literal }
