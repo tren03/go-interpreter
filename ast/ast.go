@@ -34,16 +34,6 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
-// Ast node struct for Identifier -> Identifier may produce an expression, so they implement they expression interaface
-type Identifier struct {
-	Token token.Token // the token.IDENT token
-	Value string
-}
-
-func (i *Identifier) expressionNode()      {}
-func (i *Identifier) TokenLiteral() string { return i.Token.Literal } // just so that let can be considered in the node interface
-func (i *Identifier) String() string       { return i.Value }
-
 // ******* LET STATEMENT *******
 // Ast node stuct for let statement - let <identifier> = <expression> (the Right side can be a literal or expression, we take experssion to cover all cases)
 type LetStatement struct {
@@ -111,6 +101,16 @@ func (p *Program) String() string {
 	return out.String()
 }
 
+// Ast node struct for Identifier -> Identifier may produce an expression, so they implement they expression interaface
+type Identifier struct {
+	Token token.Token // the token.IDENT token
+	Value string
+}
+
+func (i *Identifier) expressionNode()      {}
+func (i *Identifier) TokenLiteral() string { return i.Token.Literal } // just so that let can be considered in the node interface
+func (i *Identifier) String() string       { return i.Value }
+
 type IntegerLiteral struct {
 	Token token.Token
 	Value int64
@@ -119,3 +119,21 @@ type IntegerLiteral struct {
 func (il *IntegerLiteral) expressionNode()      {}
 func (il *IntegerLiteral) TokenLiteral() string { return il.Token.Literal }
 func (il *IntegerLiteral) String() string       { return il.Token.Literal }
+
+// <operator><expression> [operator can be -,!]
+type PrefixExpression struct {
+	Token    token.Token // prefix token ex - '!'
+	Operator string
+	Right    Expression
+}
+
+func (pe *PrefixExpression) expressionNode()      {}
+func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
+func (pe *PrefixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(pe.Operator)
+	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+	return out.String()
+}
