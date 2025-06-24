@@ -9,6 +9,7 @@ import (
 	"github.com/tren03/go-interpreter/token"
 )
 
+// Responsible for converting tokens -> AST
 type Parser struct {
 	l         *lexer.Lexer // Pointer to instance of a lexer
 	errors    []string

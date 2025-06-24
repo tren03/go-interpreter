@@ -108,3 +108,55 @@ we build a identifier test in parser
 
 l: we build our AST node and then try to fill its field by calling other
 parsing functions. 
+
+
+24/06/25
+Project Overview
+This is an implementation of a Monkey programming language interpreter written in Go. The Monkey language is a simple, educational programming language designed to teach the fundamentals of language implementation and interpreter design.
+Architecture
+The project follows a classic compiler/interpreter pipeline with these main components:
+
+1. Token System (token/)
+Defines all possible token types (keywords, operators, literals, etc.)
+Supports tokens like let, fn, if, return, arithmetic operators, comparison operators
+Includes a keyword lookup system to distinguish between identifiers and reserved words
+
+2. Lexer (lexer/)
+Converts source code into a stream of tokens
+Handles character-by-character parsing with lookahead capabilities
+Supports multi-character tokens like == and !=
+Skips whitespace and handles identifiers, numbers, and keywords
+
+3. Abstract Syntax Tree (AST) (ast/)
+Defines the structure for representing parsed code
+Implements interfaces for Node, Statement, and Expression
+Supports various node types:
+Statements: LetStatement, ReturnStatement, ExpressionStatement
+Expressions: Identifier, IntegerLiteral, PrefixExpression, InfixExpression, Boolean
+
+4. Parser (parser/)
+Implements a Pratt parser (top-down operator precedence parser)
+Converts tokens into an AST
+Handles operator precedence and associativity
+Uses prefix and infix parsing functions for different token types
+
+5. REPL (repl/)
+Provides an interactive Read-Eval-Print Loop
+Currently only tokenizes input (lexer integration complete)
+Ready for parser integration
+Current Status
+The project appears to be in active development with:
+✅ Complete: Token system, lexer, AST definitions, basic parser
+�� In Progress: Parser implementation (partially complete)
+❌ Not Started: Evaluator/interpreter, environment management, function calls
+Language Features (Planned/Implemented)
+The Monkey language supports:
+Variables: let x = 5;
+Functions: fn(x, y) { return x + y; }
+Control flow: if/else expressions
+Operators: Arithmetic (+, -, *, /), comparison (==, !=, <, >), logical (!)
+Data types: Integers, booleans, identifiers
+Function calls: add(2, 3)
+
+
+Try dry running 1 + 2 * 3 in parser to understand precedence
